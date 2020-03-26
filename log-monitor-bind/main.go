@@ -1,51 +1,53 @@
 package main
 
 import (
-	"ethereum/config"
-	"ethereum/contract/wrapper/eztoken"
-	"ethereum/ethtool"
+	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func main() {
-	addrHexBytes, err := ioutil.ReadFile("../contract/build/EzToken.addr")
-	assert(err)
-	contractAddress := common.HexToAddress(string(addrHexBytes))
-	assert(err)
-	client, err := ethtool.Dial("ws://" + config.SERVER)
-	assert(err)
+	client, err := ethclient.Dial("wss://mainnet.infura.io/ws/v3/9831d331dbcd429b88b990811cffd50e")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	inst, err := eztoken.NewEztoken(contractAddress, client)
-	assert(err)
+	// 合约地址
+	contractAddress := common.HexToAddress("0xdac17f958d2ee523a2206206994597c13d831ec7")
+	query := ethereum.FilterQuery{
+		// FromBlock: big.NewInt(2394201),
+		// ToBlock:   big.NewInt(2394201),
+		Addresses: []common.Address{
+			contractAddress,
+		},
+	}
 
-	watchOpts := &bind.WatchOpts{}
-	events := make(chan *eztoken.EztokenTransfer)
-	var _from []common.Address
-	var _to []common.Address
-	sub, err := inst.WatchTransfer(watchOpts, events, _from, _to)
-	assert(err)
-	// fmt.Println(sub)
+	logs := make(chan types.Log)
+	sub, err := client.SubscribeFilterLogs(context.Background(), query, logs)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for {
 		select {
 		case err := <-sub.Err():
-			panic(err)
-		case event := <-events:
-			fmt.Println("captured:")
-			fmt.Println("-> from: ", event.From.Hex())
-			fmt.Println("-> to: ", event.To.Hex())
-			fmt.Println("-> value:", event.Value)
-		}
-	}
-}
+			log.Fatal(err)
+		case vLog := <-logs:
+			tx, isPending, err := client.TransactionByHash(context.Background(), vLog.TxHash)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-func assert(err error) {
-	if err != nil {
-		log.Fatalln(err)
+			if !isPending {
+				fmt.Println("txhash:", tx.Hash().Hex())    // txhash
+				fmt.Println("To:", tx.To().String())       // to
+				fmt.Println("Value:", tx.Value().String()) // Value
+			}
+		}
 	}
 }
