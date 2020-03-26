@@ -142,7 +142,5 @@ func ETHTransfer(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	handles.Success("OK", gin.H{
-		"transaction_hash": signedTx.Hash().Hex(),
-	}, c)
+	handles.Success("OK", gin.H{"transaction_hash": signedTx.Hash().Hex()}, c)
 }

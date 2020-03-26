@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetRouter 返回所有路由
 func GetRouter() *gin.Engine {
 	app := gin.Default()
 

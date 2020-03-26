@@ -58,24 +58,6 @@ func (addr Addr) GetBalance() gin.H {
 		log.Fatal(err)
 	}
 
-	// name, err := instance.Name(&bind.CallOpts{})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// symbol, err := instance.Symbol(&bind.CallOpts{})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// decimals, err := instance.Decimals(&bind.CallOpts{})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// fmt.Printf("name: %s\n", name)         // "name: Golem Network"
-	// fmt.Printf("symbol: %s\n", symbol)     // "symbol: GNT"
-	// fmt.Printf("decimals: %v\n", decimals) // "decimals: 18"
 	return gin.H{
 		"eth":   balance,
 		"token": bal.Int64(),
