@@ -2,24 +2,18 @@ package config
 
 import (
 	"log"
-	"sync"
 
+	// mysql 必要组件
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
 
-var (
-	once sync.Once
-)
-
+// GetMysql 获取数据库连接
 func GetMysql() *gorm.DB {
-	var db *gorm.DB
-	var err error
-	once.Do(func() {
-		db, err = gorm.Open("mysql", "root:123456@/ethereum?charset=utf8&parseTime=True&loc=Local")
-		if err != nil {
-			log.Fatalln(err)
-		}
-	})
+	db, err := gorm.Open("mysql", "root:123456@/ethereum?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	return db
 }

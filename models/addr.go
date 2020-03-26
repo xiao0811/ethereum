@@ -4,16 +4,20 @@ import (
 	"context"
 	"ethereum/config"
 	"ethereum/contract/wrapper/eztoken"
+	"io/ioutil"
 	"log"
 	"time"
 
-	"github.com/gin-gonic/gin"
-
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/gin-gonic/gin"
 )
 
+// Addr 地址库
 type Addr struct {
 	ID        uint       `gorm:"primary_key" json:"id"`
 	Addr      string     `json:"addr" gorm:"unique;not null;size:42"`
@@ -24,6 +28,7 @@ type Addr struct {
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 
+// GetBalance 获取用户账户信息
 func (addr Addr) GetBalance() gin.H {
 	client, err := ethclient.Dial(config.SERVER)
 	if err != nil {
@@ -75,4 +80,24 @@ func (addr Addr) GetBalance() gin.H {
 		"eth":   balance,
 		"token": bal.Int64(),
 	}
+}
+
+// GetAccountPrivateKey 获取用户PrivateKey
+func (addr *Addr) GetAccountPrivateKey() string {
+	db := config.GetMysql()
+	db.Where("addr = ?", addr.Addr).First(addr)
+	defer db.Close()
+	return importKs(addr.URL[11:])
+}
+
+func importKs(file string) string {
+	keyJSON, err := ioutil.ReadFile(file)
+	if err != nil {
+		return ""
+	}
+	key, _ := keystore.DecryptKey(
+		keyJSON,         // keystore json
+		config.Password, // 解密口令，对称
+	)
+	return hexutil.Encode(crypto.FromECDSA(key.PrivateKey))
 }

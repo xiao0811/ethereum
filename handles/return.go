@@ -6,14 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ResponseData 返回数据类型结构体
 type ResponseData struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
 
-// ReturnJson 返回json
-func (rd ResponseData) ReturnJson(c *gin.Context) {
+// ReturnJSON 返回json
+func (rd ResponseData) ReturnJSON(c *gin.Context) {
 	c.AbortWithStatusJSON(rd.Code, rd)
 }
 
@@ -23,7 +24,7 @@ func Error(code int, message string, c *gin.Context) {
 		Code:    code,
 		Message: message,
 		Data:    nil,
-	}.ReturnJson(c)
+	}.ReturnJSON(c)
 }
 
 // Success 正确返回
@@ -32,5 +33,5 @@ func Success(message string, data interface{}, c *gin.Context) {
 		Code:    http.StatusOK,
 		Message: message,
 		Data:    data,
-	}.ReturnJson(c)
+	}.ReturnJSON(c)
 }
