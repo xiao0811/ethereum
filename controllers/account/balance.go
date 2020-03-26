@@ -86,6 +86,15 @@ func TokenTransfer(c *gin.Context) {
 			handles.Success("转账成功!", gin.H{
 				"txid": tx.Hash().Hex(),
 			}, c)
+			transactionLog := &models.TransactionLog{
+				To:              transfer.To,
+				From:            transfer.From,
+				Value:           transfer.Token,
+				Type:            "USDT",
+				Status:          models.Pending,
+				TransactionHash: tx.Hash().Hex(),
+			}
+			transactionLog.Create()
 		}
 	}
 }
@@ -142,5 +151,14 @@ func ETHTransfer(c *gin.Context) {
 		log.Fatal(err)
 	}
 
+	transactionLog := &models.TransactionLog{
+		To:              transfer.To,
+		From:            transfer.From,
+		Value:           transfer.Token,
+		Type:            "ETH",
+		Status:          models.Pending,
+		TransactionHash: signedTx.Hash().Hex(),
+	}
+	transactionLog.Create()
 	handles.Success("OK", gin.H{"transaction_hash": signedTx.Hash().Hex()}, c)
 }
