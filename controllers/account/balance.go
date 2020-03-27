@@ -13,6 +13,7 @@ import (
 	"net/http"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -53,7 +54,6 @@ func TokenTransfer(c *gin.Context) {
 		var addr = &models.Addr{Addr: transfer.From}
 		privateKey := addr.GetAccountPrivateKey()
 		balance := addr.GetBalance()
-		_ = inst
 		var eth = balance["eth"].(*big.Int)
 		var token = balance["token"].(int64)
 		if eth.Int64() <= 800000000000000 {
@@ -110,6 +110,7 @@ func ETHTransfer(c *gin.Context) {
 
 	addr := &models.Addr{Addr: transfer.From}
 	_privateKey := addr.GetAccountPrivateKey()
+	// _privateKey := "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d"
 	privateKey, err := crypto.HexToECDSA(_privateKey[2:])
 	if err != nil {
 		log.Println(err)
