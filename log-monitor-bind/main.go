@@ -4,12 +4,17 @@ import (
 	"ethereum/config"
 	"ethereum/contract/wrapper/eztoken"
 	"ethereum/ethtool"
-	"fmt"
+	"ethereum/models"
 	"log"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 )
+
+func init() {
+	db := config.GetMysql()
+	db.AutoMigrate(&models.MonitorLog{})
+}
 
 func main() {
 	log.Println("监听交易开始......")
@@ -38,23 +43,23 @@ func monitor() {
 		case err := <-sub.Err():
 			log.Println(err)
 		case event := <-events:
-			fmt.Println(event.Raw.BlockHash.String(), ":")
-			fmt.Println("from: ", event.From.Hex())
-			fmt.Println("to: ", event.To.Hex())
-			fmt.Println("value:", event.Value)
-			fmt.Println("TxHash:", event.Raw.TxHash.String())
-			fmt.Println("BlockNumber:", event.Raw.BlockNumber)
-			fmt.Println("---------------------------------------------------")
+			// fmt.Println(event.Raw.BlockHash.String(), ":")
+			// fmt.Println("from: ", event.From.Hex())
+			// fmt.Println("to: ", event.To.Hex())
+			// fmt.Println("value:", event.Value)
+			// fmt.Println("TxHash:", event.Raw.TxHash.String())
+			// fmt.Println("BlockNumber:", event.Raw.BlockNumber)
+			// fmt.Println("---------------------------------------------------")
 			// 处理交易逻辑
-			// monitorLog := &models.MonitorLog{
-			// 	BlockNumber:     event.Raw.BlockNumber,
-			// 	BlockHash:       event.Raw.BlockHash.String(),
-			// 	TransactionHash: event.Raw.TxHash.String(),
-			// 	From:            event.From.Hex(),
-			// 	To:              event.To.Hex(),
-			// 	Value:           event.Value,
-			// }
-			// monitorLog.Create()
+			monitorLog := &models.MonitorLog{
+				BlockNumber:     event.Raw.BlockNumber,
+				BlockHash:       event.Raw.BlockHash.String(),
+				TransactionHash: event.Raw.TxHash.String(),
+				From:            event.From.Hex(),
+				To:              event.To.Hex(),
+				Value:           event.Value,
+			}
+			monitorLog.Create()
 		}
 	}
 }
