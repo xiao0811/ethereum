@@ -18,6 +18,7 @@ import (
 )
 
 // Addr 地址库
+// status默认值为0, 表示地址暂未分配用, 1 表示已分配
 type Addr struct {
 	ID        uint       `gorm:"primary_key" json:"id"`
 	Addr      string     `json:"addr" gorm:"unique;not null;size:42"`
