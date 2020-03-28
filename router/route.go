@@ -2,6 +2,7 @@ package router
 
 import (
 	"ethereum/controllers/account"
+	"ethereum/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,13 +11,19 @@ import (
 func GetRouter() *gin.Engine {
 	app := gin.Default()
 
-	// 根据地址查看用户账户
-	app.POST("balance", account.Balance)
-	// 代币转账
-	app.POST("tokenTransfer", account.TokenTransfer)
-	// 生成账户
-	app.POST("accountGenerate", account.Generate)
-	// ETH 转账
-	app.POST("ETHTransfer", account.ETHTransfer)
+	v1 := app.Group("v1")
+	{
+		// 使用RSA中间件
+		v1.Use(middleware.Rsa())
+		// 根据地址查看用户账户
+		v1.POST("balance", account.Balance)
+		// 代币转账
+		v1.POST("tokenTransfer", account.TokenTransfer)
+		// 生成账户
+		v1.POST("accountGenerate", account.Generate)
+		// ETH 转账
+		v1.POST("ETHTransfer", account.ETHTransfer)
+	}
+
 	return app
 }
