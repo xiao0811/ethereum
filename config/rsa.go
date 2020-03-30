@@ -34,7 +34,7 @@ func RsaDecrypt(cipherText []byte) ([]byte, error) {
 	privateKey, err := ioutil.ReadFile("./files/private.pem")
 	block, _ := pem.Decode(privateKey)
 	if block == nil {
-		return nil, errors.New("private key error!")
+		return nil, errors.New("private key error")
 	}
 	// 解析PKCS1格式的私钥
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)

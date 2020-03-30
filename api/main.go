@@ -13,7 +13,6 @@ func init() {
 	err := db.AutoMigrate(
 		&models.Addr{},           // 地址库
 		&models.TransactionLog{}, // 交易记录
-		&models.MonitorLog{},     // 监听记录
 	).Error
 	if err != nil {
 		log.Fatalln(err)

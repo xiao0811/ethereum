@@ -43,7 +43,7 @@ func TokenTransfer(c *gin.Context) {
 	if err := c.ShouldBind(&transfer); err != nil {
 		handles.Error(http.StatusBadRequest, "数据有误!", c)
 	} else {
-		client, err := ethtool.Dial(config.GetConfig().InfuraConfig.Http)
+		client, err := ethtool.Dial(config.GetConfig().InfuraConfig.HTTP)
 		handles.ErrorVerify(err)
 		// 合约地址
 		contractAddress := common.HexToAddress(config.GetConfig().UsdtConfig.Token)

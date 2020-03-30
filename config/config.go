@@ -17,9 +17,9 @@ type MysqlConfig struct {
 	Database string `yaml:"database"`
 }
 
-// InfuraConfig Infura 链接信息
+// InfuraConfig infura 链接信息
 type InfuraConfig struct {
-	Http string `yaml:"http"`
+	HTTP string `yaml:"http"`
 	Wss  string `yaml:"wss"`
 }
 
@@ -33,6 +33,7 @@ type AddrConfig struct {
 	Password string `yaml:"password"`
 }
 
+// Yaml 整个结构体
 type Yaml struct {
 	MysqlConfig  `yaml:"mysql"`
 	InfuraConfig `yaml:"infura"`
@@ -48,7 +49,7 @@ var (
 // GetConfig 返回所有配置信息
 func GetConfig() Yaml {
 	once.Do(func() {
-		yamlFile, err := ioutil.ReadFile("./env.yaml")
+		yamlFile, err := ioutil.ReadFile("../env.yaml")
 		if err != nil {
 			log.Fatalln(err)
 		}

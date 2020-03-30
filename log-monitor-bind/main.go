@@ -24,9 +24,11 @@ func main() {
 
 func monitor() {
 	// 合约地址
-	contractAddress := common.HexToAddress("0xdac17f958d2ee523a2206206994597c13d831ec7")
+	conf := config.GetConfig()
+	contractAddress := common.HexToAddress(conf.UsdtConfig.Token)
 
-	client, err := ethtool.Dial(config.WSSSERVER)
+	client, err := ethtool.Dial(conf.InfuraConfig.Wss)
+	assert(err)
 	assert(err)
 
 	inst, err := eztoken.NewEztoken(contractAddress, client)
