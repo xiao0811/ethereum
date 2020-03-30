@@ -12,11 +12,9 @@ import (
 // GetMysql 获取数据库连接
 func GetMysql() *gorm.DB {
 	conf := GetConfig().MysqlConfig
-	db, err := gorm.Open("mysql", conf.Username+":"+
-		conf.Password+"@tcp("+
-		conf.Host+":"+
-		strconv.Itoa(conf.Port)+")/"+
-		conf.Database+"?charset=utf8&parseTime=True&loc=Local",
+	db, err := gorm.Open("mysql", conf.Username+":"+conf.Password+"@tcp("+
+		conf.Host+":"+strconv.Itoa(conf.Port)+")/"+conf.Database+
+		"?charset=utf8&parseTime=True&loc=Local",
 	)
 	if err != nil {
 		log.Fatalln(err)

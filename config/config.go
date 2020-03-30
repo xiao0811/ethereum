@@ -17,15 +17,18 @@ type MysqlConfig struct {
 	Database string `yaml:"database"`
 }
 
+// InfuraConfig Infura 链接信息
 type InfuraConfig struct {
 	Http string `yaml:"http"`
 	Wss  string `yaml:"wss"`
 }
 
+// UsdtConfig USDT配置
 type UsdtConfig struct {
 	Token string `yaml:"token"`
 }
 
+// AddrConfig 生成地址池信息
 type AddrConfig struct {
 	Password string `yaml:"password"`
 }
@@ -42,6 +45,7 @@ var (
 	once sync.Once
 )
 
+// GetConfig 返回所有配置信息
 func GetConfig() Yaml {
 	once.Do(func() {
 		yamlFile, err := ioutil.ReadFile("./env.yaml")
