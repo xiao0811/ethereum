@@ -2,7 +2,6 @@ package models
 
 import (
 	"ethereum/config"
-	"math/big"
 	"time"
 )
 
@@ -10,14 +9,14 @@ import (
 type MonitorLog struct {
 	ID              uint       `gorm:"primary_key" json:"id"`
 	BlockNumber     uint64     `json:"block_number"`
-	BlockHash       string     `json:"block_hash"`
-	TransactionHash string     `json:"transaction_hash"`
-	From            string     `json:"from"`
-	To              string     `json:"to"`
-	Value           *big.Int   `json:"value"`
+	BlockHash       string     `json:"block_hash" gorm:"type:char(66)"`
+	TransactionHash string     `json:"transaction_hash" gorm:"type:char(66)"`
+	From            string     `json:"from" gorm:"type:char(42)"`
+	To              string     `json:"to" gorm:"type:char(42)"`
+	Value           int64      `json:"value"`
 	CreatedAt       time.Time  `json:"created_at"`
 	UpdatedAt       time.Time  `json:"updated_at"`
-	DeletedAt       *time.Time `sql:"index" json:"deleted_at"`
+	DeletedAt       *time.Time `sql:"index" json:"deleted_at,omitempty"`
 }
 
 // Create 创建监听日志

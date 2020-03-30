@@ -14,6 +14,7 @@ import (
 func init() {
 	db := config.GetMysql()
 	db.AutoMigrate(&models.MonitorLog{})
+	db.Close()
 }
 
 func main() {
@@ -57,7 +58,7 @@ func monitor() {
 				TransactionHash: event.Raw.TxHash.String(),
 				From:            event.From.Hex(),
 				To:              event.To.Hex(),
-				Value:           event.Value,
+				Value:           event.Value.Int64(),
 			}
 			monitorLog.Create()
 		}

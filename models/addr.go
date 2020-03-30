@@ -21,12 +21,12 @@ import (
 // status默认值为0, 表示地址暂未分配用, 1 表示已分配
 type Addr struct {
 	ID        uint       `gorm:"primary_key" json:"id"`
-	Addr      string     `json:"addr" gorm:"unique;not null;size:42"`
+	Addr      string     `json:"addr" gorm:"unique;not null;type:char(42)"`
 	URL       string     `json:"url"`
 	Status    uint8      `json:"status" gorm:"default:0"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at,omitempty"`
 }
 
 // GetBalance 获取用户账户信息

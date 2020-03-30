@@ -18,11 +18,11 @@ const (
 type TransactionLog struct {
 	ID uint `gorm:"primary_key" json:"id"`
 	// 交易hash
-	TransactionHash string `json:"transaction_hash"`
+	TransactionHash string `json:"transaction_hash" gorm:"type:char(66)"`
 	// 交易发起人
-	From string `json:"from"`
+	From string `json:"from" gorm:"type:char(42)"`
 	// 交易接收人
-	To string `json:"to"`
+	To string `json:"to" gorm:"type:char(42)"`
 	// 发送金额
 	Value int64 `json:"value"`
 	// 交易类型 ETH/USDT
@@ -31,7 +31,7 @@ type TransactionLog struct {
 	Status    uint8      `json:"status"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at,omitempty"`
 }
 
 // Create 创建交易记录
