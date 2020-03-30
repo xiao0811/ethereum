@@ -25,7 +25,7 @@ func Generate(c *gin.Context) {
 				keystore.StandardScryptN,
 				keystore.StandardScryptP,
 			)
-			account, err := ks.NewAccount(config.Password)
+			account, err := ks.NewAccount(config.GetConfig().AddrConfig.Password)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -40,6 +40,7 @@ func Generate(c *gin.Context) {
 	}
 }
 
+// NewAccount 从地址从拿出一个地址
 func NewAccount(c *gin.Context) {
 	var addr models.Addr
 	db := config.GetMysql()
@@ -50,7 +51,5 @@ func NewAccount(c *gin.Context) {
 	addr.Status = 0
 	db.Save(&addr)
 	db.Close()
-	handles.Success("OK", gin.H{
-		"addr": addr.Addr,
-	}, c)
+	handles.Success("OK", gin.H{"addr": addr.Addr}, c)
 }

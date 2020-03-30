@@ -8,7 +8,7 @@ import (
 
 // GetClient 获取以太坊客户端连接
 func GetClient() *ethclient.Client {
-	client, err := ethclient.Dial(SERVER)
+	client, err := ethclient.Dial(GetConfig().InfuraConfig.Http)
 	if err != nil {
 		log.Fatal(err)
 	}

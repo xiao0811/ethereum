@@ -31,14 +31,14 @@ type Addr struct {
 
 // GetBalance 获取用户账户信息
 func (addr Addr) GetBalance() gin.H {
-	client, err := ethclient.Dial(config.SERVER)
+	client, err := ethclient.Dial("http://47.244.209.218:8545")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// 合约地址
 	// Golem (GNT) Address less  0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab
-	tokenAddress := common.HexToAddress(config.TokenAddress)
+	tokenAddress := common.HexToAddress("0xdAC17F958D2ee523a2206206994597C13D831ec7")
 	instance, err := eztoken.NewToken(tokenAddress, client)
 	if err != nil {
 		log.Fatalln(err)
@@ -79,8 +79,8 @@ func importKs(file string) string {
 		return ""
 	}
 	key, _ := keystore.DecryptKey(
-		keyJSON,         // keystore json
-		config.Password, // 解密口令，对称
+		keyJSON,                                // keystore json
+		config.GetConfig().AddrConfig.Password, // 解密口令，对称
 	)
 	return hexutil.Encode(crypto.FromECDSA(key.PrivateKey))
 }
