@@ -1,6 +1,9 @@
 package handles
 
 import (
+	"encoding/json"
+	"ethereum/config"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +19,7 @@ type ResponseData struct {
 // ReturnJSON 返回json
 func (rd ResponseData) ReturnJSON(c *gin.Context) {
 	c.AbortWithStatusJSON(rd.Code, rd)
+	return
 }
 
 // Error 错误返回
@@ -29,9 +33,18 @@ func Error(code int, message string, c *gin.Context) {
 
 // Success 正确返回
 func Success(message string, data interface{}, c *gin.Context) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Println(err)
+	}
+	// 加密
+	encryptData, err := config.RsaEncrypt(jsonData)
+	if err != nil {
+		log.Println(err)
+	}
 	ResponseData{
 		Code:    http.StatusOK,
 		Message: message,
-		Data:    data,
+		Data:    encryptData,
 	}.ReturnJSON(c)
 }

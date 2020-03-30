@@ -23,6 +23,8 @@ func GetRouter() *gin.Engine {
 		v1.POST("accountGenerate", account.Generate)
 		// ETH 转账
 		v1.POST("ETHTransfer", account.ETHTransfer)
+		// 获取一个用户
+		v1.POST("createAccount", account.NewAccount)
 	}
 
 	return app

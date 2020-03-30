@@ -9,8 +9,8 @@ import (
 
 func init() {
 	db := config.GetMysql()
-	// 制动迁移
-	db.AutoMigrate(&models.Addr{}, &models.TransactionLog{})
+	// 自动迁移
+	db.AutoMigrate(&models.Addr{}, &models.TransactionLog{}, &models.MonitorLog{})
 }
 
 func main() {
