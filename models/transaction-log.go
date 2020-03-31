@@ -11,7 +11,7 @@ const (
 	// Success 交易成功
 	Success = 1
 	// Pending 交易确认中
-	Pending = 2 // 交易确认中
+	Pending = 2
 )
 
 // TransactionLog 交易记录

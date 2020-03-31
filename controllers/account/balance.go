@@ -3,6 +3,7 @@ package account
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/json"
 	"ethereum/config"
 	"ethereum/contract/wrapper/eztoken"
 	"ethereum/ethtool"
@@ -28,12 +29,17 @@ type Transfer struct {
 
 // Balance 获取用户账户信息
 func Balance(c *gin.Context) {
-	addr := c.PostForm("address")
 	// 验证地址
-	if !handles.AddressVerify(addr) {
+	var addr struct {
+		Addr string `json:"address"`
+	}
+	_data, _ := c.Get("data")
+	json.Unmarshal(_data.([]byte), &addr)
+	if !handles.AddressVerify(addr.Addr) {
 		handles.Error(http.StatusBadRequest, "用户地址不正确", c)
+		return
 	} else {
-		handles.Success("OK", models.Addr{Addr: addr}.GetBalance(), c)
+		handles.Success("OK", models.Addr{Addr: addr.Addr}.GetBalance(), c)
 	}
 }
 

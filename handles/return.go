@@ -19,7 +19,6 @@ type ResponseData struct {
 // ReturnJSON 返回json
 func (rd ResponseData) ReturnJSON(c *gin.Context) {
 	c.AbortWithStatusJSON(rd.Code, rd)
-	return
 }
 
 // Error 错误返回

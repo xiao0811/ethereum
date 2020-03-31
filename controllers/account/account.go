@@ -44,11 +44,11 @@ func Generate(c *gin.Context) {
 func NewAccount(c *gin.Context) {
 	var addr models.Addr
 	db := config.GetMysql()
-	if err := db.Where("status = ?", 1).First(&addr).Error; err != nil {
+	if err := db.Where("status = ?", 0).First(&addr).Error; err != nil {
 		handles.Error(http.StatusInternalServerError, "服务器没地址了", c)
 		return
 	}
-	addr.Status = 0
+	addr.Status = 1
 	db.Save(&addr)
 	db.Close()
 	handles.Success("OK", gin.H{"addr": addr.Addr}, c)
